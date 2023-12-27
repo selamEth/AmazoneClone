@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/AmazoneClone/static/css/main.2af5b94e.css",
-    "main.js": "/AmazoneClone/static/js/main.331aa18c.js",
-    "index.html": "/AmazoneClone/index.html",
-    "main.2af5b94e.css.map": "/AmazoneClone/static/css/main.2af5b94e.css.map",
-    "main.331aa18c.js.map": "/AmazoneClone/static/js/main.331aa18c.js.map"
+    "main.css": "/AmazoneClonenpm/static/css/main.2af5b94e.css",
+    "main.js": "/AmazoneClonenpm/static/js/main.0ad2638d.js",
+    "index.html": "/AmazoneClonenpm/index.html",
+    "main.2af5b94e.css.map": "/AmazoneClonenpm/static/css/main.2af5b94e.css.map",
+    "main.0ad2638d.js.map": "/AmazoneClonenpm/static/js/main.0ad2638d.js.map"
   },
   "entrypoints": [
     "static/css/main.2af5b94e.css",
-    "static/js/main.331aa18c.js"
+    "static/js/main.0ad2638d.js"
   ]
 }
