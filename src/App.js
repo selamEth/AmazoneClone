@@ -40,8 +40,10 @@ function App() {
 
   }, []);
   return (
+    
     <div className="App">
-      <Routes>
+
+      <Routes basename={process.env.PUBLIC_URL}>
         <Route path="/" element={<Shared />}>
           <Route path="/" element={<Home />} />
           <Route path="Checkout" element={<Checkout />} />

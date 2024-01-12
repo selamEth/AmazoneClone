@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useStateValue } from "../StateProvider";
-import Checkoutproduct from "./Checkoutproduct";
+import CheckoutProduct from "../Component/Checkoutproduct";
 import "./Payment.css";
-import { loadStripe } from "@stripe/stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 import {
     CardElement,
-    Elements,
     useElements,
     useStripe,
 } from "@stripe/react-stripe-js";
@@ -17,6 +16,10 @@ import { db } from "../firebase";
 function Payment() {
     const navigate = useNavigate();
     const [{ basket, user }, dispatch] = useStateValue();
+
+    const getBasketTotal = (basket) =>
+        basket.reduce((amount, item) => item.price + amount, 0);
+
     const stripe = useStripe();
     const elements = useElements();
 
@@ -26,13 +29,20 @@ function Payment() {
     const [processing, setProcessing] = useState("");
     const [succeeded, setSucceeded] = useState(false);
 
-    const getBasketTotal = (basket) =>
-        basket.reduce((amount, item) => item.price + amount, 0);
+    const [clientSecret, setClientSecret] = useState(true);
 
-    const handleChange = (e) => {
-        setDisabled(e.empty);
-        setError(e.error ? e.error.message : "");
-    };
+    useEffect(() => {
+        const getClientSecret = async () => {
+            const response = await axios({
+                method: "post",
+                url: `/payments/create?total=${getBasketTotal(basket) * 100}`,
+            });
+            setClientSecret(response.data.clientSecret);
+        };
+        getClientSecret();
+    }, [basket]);
+
+    console.log("THE SECRET IS >>>", clientSecret);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,7 +58,7 @@ function Payment() {
                 // paymentIntent=Payment comfirmation;
 
                 db.collection("users")
-                    .doc(user.uid)
+                    .doc(user?.uid)
                     .collection("orders")
                     .doc(paymentIntent.id)
                     .set({
@@ -65,24 +75,20 @@ function Payment() {
                     type: "EMPTY_BASKET",
                 });
 
-                navigate("/Orders");
+                navigate("../Orders");
             });
     };
 
-    const [clientSecret, setClientSecret] = useState(true);
+    const handleChange = (e) => {
+        setDisabled(e.empty);
+        setError(e.error ? e.error.message : "");
+    };
 
-    useEffect(() => {
-        const getClientSecret = async () => {
-            const response = await axios({
-                method: "post",
-                url:`/payments/create?total=${getBasketTotal(basket) * 100}`,
-      });
-    setClientSecret(response.data.clientSecret);
-};
-getClientSecret();
-  }, [basket]);
+  
 
-console.log("THE SECRET IS >>>", clientSecret);
+ 
+
+
 
 return (
     <div className="payment">
@@ -111,7 +117,7 @@ return (
 
                     <div className="payment__items">
                         {basket?.map((item) => (
-                            <Checkoutproduct
+                            <CheckoutProduct
                                 id={item.id}
                                 description={item.description}
                                 title={item.title}
